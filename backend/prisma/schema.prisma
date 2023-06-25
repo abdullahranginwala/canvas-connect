@@ -11,7 +11,19 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  name  String
-  email String  @unique
+  id           Int          @id @default(autoincrement())
+  googleId     String       @unique
+  name         String
+  email        String       @unique
+  whiteboards  Whiteboard[] @relation("owner")
+  sharedBoards Whiteboard[] @relation("shared")
+}
+
+model Whiteboard {
+  id         Int    @id @default(autoincrement())
+  title      String
+  owner      User   @relation(fields: [ownerId], references: [id], name: "owner")
+  ownerId    Int
+  sharedWith User[] @relation("shared")
+  content    String
 }

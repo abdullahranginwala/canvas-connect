@@ -1,13 +1,22 @@
 import express from 'express';
-import { PrismaClient } from '@prisma/client';
 import userRoutes from './user';
+import passport from 'passport';
+import session from 'express-session';
 
-const prisma = new PrismaClient();
 const app = express();
 
 app.use(express.json());
 
-app.use('/user', userRoutes);  // Add this line
+app.use(session({
+    secret: 'secret',
+    resave: false,
+    saveUninitialized: false,
+  }));
+  
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+app.use('/user', userRoutes);  
 
 app.listen(3000, () => {
   console.log('Server is running on port 3000');
